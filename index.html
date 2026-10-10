@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuctionFlow — Enterprise Real-Time Auction & Bidding Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <!-- Background Ambient Glows -->
+    <div class="glow-bg glow-1"></div>
+    <div class="glow-bg glow-2"></div>
+
+    <!-- ================= FULL-SCREEN AUTHENTICATION GATEWAY ================= -->
+    <div id="authGateway" class="auth-gateway">
+        <div class="auth-gate-card">
+            <!-- Brand Banner -->
+            <div class="auth-gate-brand">
+                <div class="auth-gate-logo">
+                    <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"></path>
+                        <path d="M16 16l6-6"></path>
+                        <path d="m8 8 6-6"></path>
+                        <path d="m9 7 8 8"></path>
+                        <path d="m21 11-8-8"></path>
+                    </svg>
+                </div>
+                <h1 class="auth-gate-title">AUCTION<span>FLOW</span></h1>
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                    <span class="auth-gate-badge">● SECURE LIVE GATEWAY</span>
+                    <span style="font-size:11.5px; color:var(--text-muted);">Spring Boot 3.x + STOMP</span>
+                </div>
+                <div class="auth-gate-security-pills">
+                    <span>🔒 256-Bit Escrow</span>
+                    <span>•</span>
+                    <span>⚡ Real-Time Floor</span>
+                    <span>•</span>
+                    <span>🛡️ Anti-Sniping Protection</span>
+                </div>
+            </div>
+
+            <!-- Mode Tabs (Sign In / Create Account / Forgot Password) -->
+            <div class="auth-mode-nav">
+                <button type="button" class="auth-mode-tab active" id="authGateTabBtn-login" onclick="switchAuthGateTab('login')">Sign In</button>
+                <button type="button" class="auth-mode-tab" id="authGateTabBtn-signup" onclick="switchAuthGateTab('signup')">Create Account</button>
+                <button type="button" class="auth-mode-tab" id="authGateTabBtn-forgot" onclick="switchAuthGateTab('forgot')">Forgot Password</button>
+            </div>
+
+            <div id="authGateErrorBanner" style="display:none;" class="auth-error-banner">
+                <span id="authGateErrorText">Error message</span>
+            </div>
+
+            <!-- ================= VIEW 1: SIGN IN ================= -->
+            <div id="authGateView-login">
+                <div class="auth-sub-heading">
+                    <h3>Welcome Back</h3>
+                    <p>Select your workspace role or enter your registered account credentials.</p>
+                </div>
+
+                <!-- Fast Role Picker for Sign In -->
+                <div class="auth-role-tabs-row">
+                    <button type="button" class="auth-role-tab-btn active" id="authGateRole-BUYER" onclick="selectAuthGateRole('BUYER')">💎 Buyer</button>
+                    <button type="button" class="auth-role-tab-btn" id="authGateRole-SELLER" onclick="selectAuthGateRole('SELLER')">💼 Seller</button>
+                    <button type="button" class="auth-role-tab-btn" id="authGateRole-ADMIN" onclick="selectAuthGateRole('ADMIN')">🛡️ Admin</button>
+                </div>
+
+                <form id="authGateLoginForm" onsubmit="handleAuthGateLogin(event)">
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Email Address</label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </span>
+                            <input type="email" id="authGateLoginEmail" class="auth-text-input" placeholder="you@domain.com" value="buyer@demo.com" required>
+                        </div>
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Password</label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </span>
+                            <input type="password" id="authGateLoginPassword" class="auth-text-input" placeholder="Enter password" value="Buyer@123" required>
+                            <button type="button" class="auth-eye-btn" onclick="toggleAuthGatePasswordVisibility('authGateLoginPassword', this)">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="auth-extras-row">
+                        <label class="auth-checkbox-label">
+                            <input type="checkbox" id="authGateRemember" checked>
+                            <span>Keep me signed in</span>
+                        </label>
+                        <a href="javascript:void(0)" class="auth-link" onclick="switchAuthGateTab('forgot')">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="auth-cta-btn" id="authGateLoginSubmitBtn">
+                        Sign In to Live Floor ➔
+                    </button>
+                </form>
+
+                <!-- 1-Click Fast Pass Instant Demo Access -->
+                <div class="auth-demo-section">
+                    <div class="auth-demo-heading">
+                        <span>⚡ 1-Click Instant Demo Login</span>
+                        <span style="font-size:10px; color:#818cf8;">No typing needed</span>
+                    </div>
+                    <div class="auth-demo-grid">
+                        <div class="auth-demo-card" onclick="quickLoginDemo('BUYER')" title="Click to instant-login as Marcus Chen (Buyer)">
+                            <div class="auth-demo-role-badge">💎 Marcus Chen</div>
+                            <div class="auth-demo-card-user">buyer@demo.com</div>
+                            <div class="auth-demo-card-tag">$58,500 Escrow</div>
+                        </div>
+                        <div class="auth-demo-card" onclick="quickLoginDemo('SELLER')" title="Click to instant-login as Victor Vance (Seller)">
+                            <div class="auth-demo-role-badge">💼 Victor Vance</div>
+                            <div class="auth-demo-card-user">seller@demo.com</div>
+                            <div class="auth-demo-card-tag">Verified Consignor</div>
+                        </div>
+                        <div class="auth-demo-card" onclick="quickLoginDemo('ADMIN')" title="Click to instant-login as System Admin">
+                            <div class="auth-demo-role-badge">🛡️ Platform Admin</div>
+                            <div class="auth-demo-card-user">admin@demo.com</div>
+                            <div class="auth-demo-card-tag">Full Oversight</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--text-secondary);">
+                    New to AuctionFlow? <a href="javascript:void(0)" class="auth-link" onclick="switchAuthGateTab('signup')">Create an account</a>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: SIGN UP ================= -->
+            <div id="authGateView-signup" style="display:none;">
+                <div class="auth-sub-heading">
+                    <h3>Create VIP Account</h3>
+                    <p>Join the live auction floor with authenticated escrow protection.</p>
+                </div>
+
+                <!-- Account Type Selector Cards -->
+                <div class="auth-account-type-grid">
+                    <div class="auth-type-card selected" id="authTypeCard-BUYER" onclick="selectSignUpRole('BUYER')">
+                        <div class="auth-type-header">
+                            <span>💎</span>
+                            <span>Buyer / Collector</span>
+                        </div>
+                        <div class="auth-type-desc">Place bids, auto-proxy bidding, and secure escrow settlement.</div>
+                    </div>
+                    <div class="auth-type-card" id="authTypeCard-SELLER" onclick="selectSignUpRole('SELLER')">
+                        <div class="auth-type-header">
+                            <span>💼</span>
+                            <span>Seller / Consignor</span>
+                        </div>
+                        <div class="auth-type-desc">List luxury assets, set reserve pricing, and receive verified payouts.</div>
+                    </div>
+                </div>
+
+                <form id="authGateSignUpForm" onsubmit="handleAuthGateRegister(event)">
+                    <div class="auth-two-col">
+                        <div class="auth-input-group">
+                            <label class="auth-input-label">Full Name</label>
+                            <input type="text" id="authSignUpName" class="auth-text-input" style="padding-left:14px;" placeholder="e.g. Alexander Wright" required>
+                        </div>
+                        <div class="auth-input-group">
+                            <label class="auth-input-label">Username</label>
+                            <input type="text" id="authSignUpUsername" class="auth-text-input" style="padding-left:14px;" placeholder="e.g. alex_collector" required>
+                        </div>
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Email Address</label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </span>
+                            <input type="email" id="authSignUpEmail" class="auth-text-input" placeholder="you@domain.com" required>
+                        </div>
+                    </div>
+
+                    <div class="auth-two-col">
+                        <div class="auth-input-group">
+                            <label class="auth-input-label">Password</label>
+                            <div class="auth-input-wrap">
+                                <input type="password" id="authSignUpPassword" class="auth-text-input" style="padding-left:14px; padding-right:34px;" placeholder="Min. 6 chars" oninput="updatePasswordStrength(this.value)" required>
+                                <button type="button" class="auth-eye-btn" onclick="toggleAuthGatePasswordVisibility('authSignUpPassword', this)">👁️</button>
+                            </div>
+                            <div class="auth-strength-meter">
+                                <div class="auth-strength-bar" id="authStrengthBar"></div>
+                            </div>
+                        </div>
+                        <div class="auth-input-group">
+                            <label class="auth-input-label">Confirm Password</label>
+                            <div class="auth-input-wrap">
+                                <input type="password" id="authSignUpConfirmPassword" class="auth-text-input" style="padding-left:14px; padding-right:34px;" placeholder="Re-type password" required>
+                                <button type="button" class="auth-eye-btn" onclick="toggleAuthGatePasswordVisibility('authSignUpConfirmPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Starting Escrow Wallet Credit</label>
+                        <div class="auth-chips-row">
+                            <button type="button" class="auth-grant-chip" onclick="selectGrantChip(10000)">+$10,000</button>
+                            <button type="button" class="auth-grant-chip selected" onclick="selectGrantChip(25000)">+$25,000</button>
+                            <button type="button" class="auth-grant-chip" onclick="selectGrantChip(50000)">+$50,000</button>
+                        </div>
+                        <input type="hidden" id="authSignUpBalance" value="25000">
+                    </div>
+
+                    <div class="auth-extras-row" style="margin-top:12px;">
+                        <label class="auth-checkbox-label">
+                            <input type="checkbox" id="authSignUpTerms" required checked>
+                            <span style="font-size:12px;">I agree to Escrow Terms, Anti-Sniping Policy & Bidding Rules</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="auth-cta-btn" id="authSignUpSubmitBtn">
+                        Create VIP Account & Enter Platform ➔
+                    </button>
+                </form>
+
+                <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--text-secondary);">
+                    Already have an account? <a href="javascript:void(0)" class="auth-link" onclick="switchAuthGateTab('login')">Sign In</a>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: FORGOT PASSWORD ================= -->
+            <div id="authGateView-forgot" style="display:none;">
+                <div class="auth-sub-heading">
+                    <h3>Reset Vault Credentials</h3>
+                    <p>Enter your account email to receive a secure recovery code and reset your password.</p>
+                </div>
+
+                <div id="authForgotStep1">
+                    <form onsubmit="handleForgotStep1(event)">
+                        <div class="auth-input-group">
+                            <label class="auth-input-label">Registered Email</label>
+                            <div class="auth-input-wrap">
+                                <span class="auth-input-icon">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                </span>
+                                <input type="email" id="authForgotEmail" class="auth-text-input" placeholder="e.g. buyer@demo.com" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-cta-btn" style="margin-top:8px;">
+                            Request Security Recovery Code ➔
+                        </button>
+                    </form>
+                </div>
+
+                <div id="authForgotStep2" style="display:none;">
+                    <div class="auth-code-box">
+                        <div class="auth-code-box-info">
+                            <div>Security Code Dispatched:</div>
+                            <span class="auth-code-badge" id="authGeneratedCodeBadge">VAULT-8821</span>
+                        </div>
+                        <button type="button" class="auth-autofill-btn" onclick="autofillSecurityCode()">⚡ Autofill</button>
+                    </div>
+
+                    <form onsubmit="handleForgotStep2(event)">
+                        <div class="auth-input-group">
+                            <label class="auth-input-label">Verification Code</label>
+                            <input type="text" id="authVerificationCodeInput" class="auth-text-input" style="padding-left:14px; font-family:var(--font-mono); font-weight:700; letter-spacing:1px;" placeholder="e.g. VAULT-8821" required>
+                        </div>
+
+                        <div class="auth-two-col">
+                            <div class="auth-input-group">
+                                <label class="auth-input-label">New Password</label>
+                                <div class="auth-input-wrap">
+                                    <input type="password" id="authNewPasswordInput" class="auth-text-input" style="padding-left:14px; padding-right:34px;" placeholder="Min. 6 chars" required>
+                                    <button type="button" class="auth-eye-btn" onclick="toggleAuthGatePasswordVisibility('authNewPasswordInput', this)">👁️</button>
+                                </div>
+                            </div>
+                            <div class="auth-input-group">
+                                <label class="auth-input-label">Confirm New Password</label>
+                                <div class="auth-input-wrap">
+                                    <input type="password" id="authConfirmNewPasswordInput" class="auth-text-input" style="padding-left:14px; padding-right:34px;" placeholder="Re-type password" required>
+                                    <button type="button" class="auth-eye-btn" onclick="toggleAuthGatePasswordVisibility('authConfirmNewPasswordInput', this)">👁️</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-cta-btn" style="margin-top:8px;">
+                            Update Password & Enter Floor ➔
+                        </button>
+                    </form>
+                </div>
+
+                <div style="text-align:center; margin-top:20px; font-size:13px; color:var(--text-secondary);">
+                    Remembered your password? <a href="javascript:void(0)" class="auth-link" onclick="switchAuthGateTab('login')">Back to Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APPLICATION (LOADS AFTER AUTHENTICATION) ================= -->
+    <div id="mainApp" class="main-app-container">
+        <!-- Top Navigation Bar -->
+        <header class="navbar" id="navbar">
+            <div class="nav-container">
+                <div class="brand" onclick="switchTab('live')">
+                    <div class="brand-logo">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"></path>
+                            <path d="M16 16l6-6"></path>
+                            <path d="m8 8 6-6"></path>
+                            <path d="m9 7 8 8"></path>
+                            <path d="m21 11-8-8"></path>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        AUCTION<span>FLOW</span>
+                        <span class="brand-badge">LIVE FLOOR</span>
+                    </div>
+                </div>
+
+                <!-- Global Search Bar -->
+                <div class="nav-search-wrap">
+                    <svg class="nav-search-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="globalNavSearch" placeholder="Search catalogue, lots, references..." oninput="handleGlobalSearch(this.value)">
+                    <span class="nav-search-kbd">/</span>
+                </div>
+
+                <!-- Status & Role Switcher Actions: Live / funds / account -->
+                <div class="nav-actions">
+                    <!-- Live WebSocket Pill -->
+                    <div class="ws-pill" id="wsStatusPill" title="Connected to High-Frequency STOMP Live Floor">
+                        <span class="ws-dot pulse"></span>
+                        <span class="ws-text">● LIVE FLOOR (8ms)</span>
+                    </div>
+
+                    <!-- Escrow Funds Pill -->
+                    <div class="funds-pill" id="navFundsPill" onclick="openDepositModal()" title="Available Escrow Funds">
+                        <span>💳</span>
+                        <span id="navBalanceDisplay">$58,500</span>
+                        <button class="funds-deposit-btn" title="Add Funds" onclick="event.stopPropagation(); openDepositModal();">+</button>
+                    </div>
+
+                    <!-- Account & Role Pill -->
+                    <button class="account-btn" id="navAccountBtn" onclick="openAuthModal()" title="View Account / Switch Role">
+                        <span id="accountAvatarIcon">👤</span>
+                        <span id="navAccountName">Marcus Chen</span>
+                        <span class="account-role-tag buyer" id="navRoleTag">Buyer</span>
+                    </button>
+
+                    <!-- Dedicated Sign Out Button -->
+                    <button class="nav-logout-btn" id="navLogoutBtn" onclick="handleLogout()" title="Sign Out of Platform">
+                        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Sign Out</span>
+                    </button>
+
+                    <!-- Sound FX Toggle -->
+                    <button class="btn-icon" id="btnAudioToggle" onclick="toggleAudio()" title="Sound Effects">
+                        🔊
+                    </button>
+
+                    <!-- List New Item CTA -->
+                    <button class="btn-primary btn-sm" onclick="openCreateModal()">
+                        <span>+ List Item</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Container: 2-Column Live Floor Layout -->
+        <main class="floor-layout">
+        <!-- ================= LEFT SIDEBAR ================= -->
+        <aside class="floor-sidebar">
+            <div class="sidebar-heading">LIVE FLOOR</div>
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active" id="tab-btn-live" onclick="switchTab('live')">
+                    <span class="sidebar-icon">⚡</span>
+                    <span>Live</span>
+                    <span class="live-dot-indicator"></span>
+                </button>
+                <button class="sidebar-btn" id="tab-btn-catalogue" onclick="switchTab('catalogue')">
+                    <span class="sidebar-icon">📑</span>
+                    <span>Catalogue</span>
+                </button>
+                <button class="sidebar-btn" id="tab-btn-dashboard" onclick="switchTab('dashboard')">
+                    <span class="sidebar-icon">👤</span>
+                    <span>My activity</span>
+                </button>
+            </div>
+
+            <div class="lot-divider" style="margin: 8px 0;"></div>
+
+            <div class="sidebar-heading">UPCOMING LOTS</div>
+            <div class="sidebar-lots-queue" id="sidebarLotsQueue">
+                <!-- Rendered dynamically -->
+            </div>
+
+            <div class="lot-divider" style="margin: 8px 0;"></div>
+
+            <div class="sidebar-heading">WORKSPACE & TOOLS</div>
+            <div class="sidebar-menu">
+                <button class="sidebar-btn" id="tab-btn-admin" onclick="switchTab('admin')">
+                    <span class="sidebar-icon">🛡️</span>
+                    <span>Admin Desk</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ================= RIGHT MAIN STAGE ================= -->
+        <div class="floor-main-content">
+            <!-- ================= VIEW 1: LIVE FLOOR ARENA (WIREFRAME STAGE) ================= -->
+            <section id="view-live" class="view-section active">
+                <div class="current-lot-arena" id="currentLotArena">
+                    <!-- Populated dynamically with Current Lot, Image, Bids & Timer -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW 2: CATALOGUE ================= -->
+            <section id="view-catalogue" class="view-section">
+            <!-- Hero Spotlight -->
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <div class="hero-tag">
+                        <span class="sparkle">✨</span> SPRING BOOT 3.x + STOMP WEBSOCKET + REACT
+                    </div>
+                    <h1 class="hero-title">High-Frequency Real-Time <br><span class="gradient-text">Asset Auctions & Escrow</span></h1>
+                    <p class="hero-desc">
+                        Enterprise-grade auction platform with algorithmic anti-sniping protection, microsecond bid reconciliation, automated Stripe escrow settlement, and forensic audit logging.
+                    </p>
+                    <div class="hero-metrics">
+                        <div class="metric-card">
+                            <span class="metric-val" id="metricGmv">$4,280,000</span>
+                            <span class="metric-label">Gross Volume Settled</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val" id="metricActiveCount">6</span>
+                            <span class="metric-label">Active Live Auctions</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val" id="metricBidsToday">1,492</span>
+                            <span class="metric-label">Bids Placed Today</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val">100% Escrow</span>
+                            <span class="metric-label">Buyer Protection</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-featured-card" id="heroFeaturedItem">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Marketplace Filter Bar -->
+            <div class="filter-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" placeholder="Search by asset title, brand, or model..." oninput="filterAuctions()">
+                </div>
+
+                <div class="category-pills" id="categoryPills">
+                    <button class="cat-pill active" onclick="selectCategory('All')">All Items</button>
+                    <button class="cat-pill" onclick="selectCategory('Vehicles')">🏎️ Vehicles</button>
+                    <button class="cat-pill" onclick="selectCategory('Watches & Jewelry')">⌚ Watches</button>
+                    <button class="cat-pill" onclick="selectCategory('Art & Antiques')">🎨 Fine Art</button>
+                    <button class="cat-pill" onclick="selectCategory('Collectibles')">💎 Collectibles</button>
+                    <button class="cat-pill" onclick="selectCategory('Electronics')">📷 Electronics</button>
+                </div>
+
+                <div class="sort-select-wrap">
+                    <select id="sortSelect" onchange="filterAuctions()" class="custom-select">
+                        <option value="endingSoon">⏳ Ending Soonest</option>
+                        <option value="highestBid">💰 Highest Bid</option>
+                        <option value="mostBids">🔥 Most Active</option>
+                        <option value="newest">⚡ Newly Listed</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Auction Grid -->
+            <div class="auctions-grid" id="auctionsGrid">
+                <!-- Auction Cards rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- ================= VIEW 2: DASHBOARD ================= -->
+        <section id="view-dashboard" class="view-section">
+            <div class="dashboard-header">
+                <div>
+                    <h2 class="view-heading" id="dashGreeting">User Dashboard</h2>
+                    <p class="view-subheading" id="dashRoleNotice">Viewing active bidding portfolio, watchlists, and escrow settlements</p>
+                </div>
+                <div class="dash-quick-stats" id="dashQuickStats">
+                    <!-- Populated dynamically based on role -->
+                </div>
+            </div>
+
+            <!-- Dashboard Sub Tabs -->
+            <div class="dash-tabs" id="dashTabContainer">
+                <button class="dash-tab active" onclick="switchDashSubTab('bids')">🎯 Active Bids & Outcomes</button>
+                <button class="dash-tab" onclick="switchDashSubTab('won')">🏆 Won Auctions & Payments</button>
+                <button class="dash-tab" onclick="switchDashSubTab('listings')">📦 My Listed Items</button>
+                <button class="dash-tab" onclick="switchDashSubTab('watchlist')">⭐ Watchlist</button>
+            </div>
+
+            <div class="dash-subview" id="dashSubView">
+                <!-- Sub content rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- ================= VIEW 3: ADMIN CONTROL ================= -->
+        <section id="view-admin" class="view-section">
+            <div class="admin-header">
+                <div>
+                    <h2 class="view-heading">🛡️ Enterprise Admin Control Center</h2>
+                    <p class="view-subheading">Platform oversight, dispute resolution desk, and cryptographically verified audit trails.</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-secondary btn-sm" onclick="exportAuditLog()">📥 Export Audit CSV</button>
+                    <button class="btn-primary btn-sm" onclick="triggerManualAudit()">⚡ Run Integrity Check</button>
+                </div>
+            </div>
+
+            <div class="admin-kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Gross Merchandise Volume</div>
+                    <div class="kpi-val" id="adminGmv">$4,280,000.00</div>
+                    <div class="kpi-delta positive">▲ 14.8% vs last cycle</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Active Live Bidding Rooms</div>
+                    <div class="kpi-val" id="adminActiveAuctions">6 Active</div>
+                    <div class="kpi-delta neutral">0 Flagged Anomalies</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Bids Processed</div>
+                    <div class="kpi-val" id="adminTotalBids">1,492 Bids</div>
+                    <div class="kpi-delta positive">Avg Latency: 11.4ms</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Open Disputes Pending</div>
+                    <div class="kpi-val" id="adminDisputes">1 Case</div>
+                    <div class="kpi-delta warning">Needs Review</div>
+                </div>
+            </div>
+
+            <!-- Admin Modules Grid -->
+            <div class="admin-modules-grid">
+                <!-- Module 1: Dispute Resolution Desk -->
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h3>⚖️ Dispute Mediation Desk</h3>
+                        <span class="badge badge-warning" id="disputeCountBadge">1 Pending</span>
+                    </div>
+                    <div class="dispute-list" id="disputeList">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Module 2: User Role & Verification Management -->
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h3>👥 Platform Users & Verification</h3>
+                        <span class="badge badge-info">5 Accounts</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="adminUserTable">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 3: Real-Time Audit Trail -->
+            <div class="admin-panel mt-4">
+                <div class="panel-header">
+                    <h3>📜 Forensic Audit Trail & WebSocket Event Log</h3>
+                    <span class="badge badge-success">Live Immutable Ledger</span>
+                </div>
+                <div class="audit-log-terminal" id="auditLogTerminal">
+                    <!-- Log lines streamed here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Blueprint removed as requested -->
+
+        </div> <!-- /floor-main-content -->
+    </main>
+
+    <!-- ================= MODAL: LIVE BIDDING ROOM ================= -->
+    <div class="modal-overlay" id="bidModal">
+        <div class="modal-card modal-lg">
+            <button class="modal-close" onclick="closeBidModal()">✕</button>
+
+            <div class="bidding-room-grid" id="biddingRoomContent">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: CREATE AUCTION ================= -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeCreateModal()">✕</button>
+            <div class="modal-header">
+                <h2>✨ List a New Luxury Asset</h2>
+                <p>Deploy a live smart auction with anti-sniping and automated escrow settlement</p>
+            </div>
+
+            <form id="createAuctionForm" onsubmit="handleCreateAuction(event)">
+                <div class="form-group">
+                    <label>Asset Title</label>
+                    <input type="text" id="newTitle" placeholder="e.g. 1974 Porsche 911 Carrera 2.7 RS" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="newCategory" required>
+                            <option value="Vehicles">Vehicles</option>
+                            <option value="Watches & Jewelry">Watches & Jewelry</option>
+                            <option value="Art & Antiques">Art & Antiques</option>
+                            <option value="Collectibles">Collectibles</option>
+                            <option value="Electronics">Electronics</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Condition</label>
+                        <select id="newCondition" required>
+                            <option value="NEW">Brand New</option>
+                            <option value="LIKE_NEW" selected>Like New / Mint</option>
+                            <option value="GOOD">Good / Restored</option>
+                            <option value="FAIR">Fair / Vintage Patina</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Starting Bid ($)</label>
+                        <input type="number" id="newStartingPrice" min="10" step="10" placeholder="10000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Reserve Price ($)</label>
+                        <input type="number" id="newReservePrice" min="0" step="10" placeholder="15000 (Optional)">
+                    </div>
+                    <div class="form-group">
+                        <label>Min Increment ($)</label>
+                        <input type="number" id="newIncrement" min="1" step="5" value="250" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Auction Duration</label>
+                        <select id="newDuration">
+                            <option value="2">2 Hours (Fast Auction)</option>
+                            <option value="24" selected>24 Hours</option>
+                            <option value="72">3 Days</option>
+                            <option value="168">7 Days</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Asset Image (Select Preset or URL)</label>
+                        <select id="newImagePreset" onchange="applyImagePreset(this.value)">
+                            <option value="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80">🏎️ Ferrari GT Classic</option>
+                            <option value="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80">⌚ Patek Philippe Calatrava</option>
+                            <option value="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80">🎨 Renaissance Masterpiece Oil</option>
+                            <option value="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80">💎 Rare Emerald Gemstone</option>
+                            <option value="custom">🔗 Custom Image URL...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="customUrlGroup" style="display: none;">
+                    <label>Custom Image URL</label>
+                    <input type="url" id="newCustomImageUrl" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label>Asset Description & Provenance</label>
+                    <textarea id="newDescription" rows="3" placeholder="Enter condition history, certificates of authenticity, and physical specifications..." required></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeCreateModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">🚀 Publish & Start Auction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: STRIPE PAYMENT & ESCROW ================= -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closePaymentModal()">✕</button>
+            <div class="modal-header">
+                <div class="stripe-badge">🔒 STRIPE ESCROW GATEWAY</div>
+                <h2>Complete Auction Settlement</h2>
+                <p>Funds are secured in escrow until you receive and verify the asset.</p>
+            </div>
+
+            <div class="payment-summary" id="paymentSummary">
+                <!-- Injected dynamically -->
+            </div>
+
+            <form id="paymentForm" onsubmit="handleProcessPayment(event)">
+                <div class="form-group">
+                    <label>Cardholder Name</label>
+                    <input type="text" id="cardName" value="Marcus Chen" required>
+                </div>
+                <div class="form-group">
+                    <label>Credit / Debit Card Number</label>
+                    <div class="card-input-wrap">
+                        <span class="card-brand">💳</span>
+                        <input type="text" id="cardNumber" value="4242 •••• •••• 4242" maxlength="19" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Expiration</label>
+                        <input type="text" id="cardExpiry" value="08/29" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CVC</label>
+                        <input type="password" id="cardCvc" value="888" maxlength="4" required>
+                    </div>
+                </div>
+
+                <div class="escrow-notice">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#10b981" stroke-width="2" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span><strong>100% Escrow Guarantee:</strong> Seller will only receive funds after insured courier delivery is signed and confirmed.</span>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closePaymentModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="btnSubmitPayment">
+                        <span>Authorize Escrow Payment</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: RATING & FEEDBACK ================= -->
+    <div class="modal-overlay" id="ratingModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeRatingModal()">✕</button>
+            <div class="modal-header">
+                <h2>⭐ Leave Seller Feedback</h2>
+                <p>Help build trust across the decentralized auction community</p>
+            </div>
+
+            <div class="rating-stars" id="starRatingSelector">
+                <span class="star" onclick="setRatingScore(1)">★</span>
+                <span class="star" onclick="setRatingScore(2)">★</span>
+                <span class="star" onclick="setRatingScore(3)">★</span>
+                <span class="star" onclick="setRatingScore(4)">★</span>
+                <span class="star active" onclick="setRatingScore(5)">★</span>
+            </div>
+            <div class="rating-label-text" id="ratingScoreText">5.0 - Exceptional Experience</div>
+
+            <div class="form-group mt-3">
+                <label>Review & Feedback</label>
+                <textarea id="ratingComment" rows="3" placeholder="Describe the packaging, authenticity, and communication speed..."></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeRatingModal()">Close</button>
+                <button type="button" class="btn-primary" onclick="submitRating()">Submit Verified Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: AUTHENTIC ROLE SIGN IN (MATCHES SCREENSHOTS) ================= -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card auth-modal-card">
+            <button class="modal-close" onclick="closeAuthModal()">✕</button>
+            
+            <h2 class="auth-title">Sign in</h2>
+            <p class="auth-subtitle">Choose your role to open the matching workspace.</p>
+
+            <!-- Role Selector 3 Tabs -->
+            <div class="auth-role-tabs">
+                <button type="button" class="auth-role-tab-btn active" id="authRoleTab-BUYER" onclick="selectAuthModalRole('BUYER')">Buyer</button>
+                <button type="button" class="auth-role-tab-btn" id="authRoleTab-SELLER" onclick="selectAuthModalRole('SELLER')">Seller</button>
+                <button type="button" class="auth-role-tab-btn" id="authRoleTab-ADMIN" onclick="selectAuthModalRole('ADMIN')">Admin</button>
+            </div>
+
+            <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                <div class="auth-field-group">
+                    <label class="auth-label">Email</label>
+                    <input type="email" id="authEmail" class="auth-input" placeholder="you@example.com" value="buyer@demo.com" required>
+                </div>
+
+                <div class="auth-field-group">
+                    <label class="auth-label">Password</label>
+                    <input type="password" id="authPassword" class="auth-input" placeholder="Your password" value="Buyer@123" required>
+                </div>
+
+                <div class="auth-options-row">
+                    <label class="auth-remember-label">
+                        <input type="checkbox" id="authRemember" checked>
+                        <span>Keep me signed in</span>
+                    </label>
+                    <a href="javascript:void(0)" class="auth-forgot-link" onclick="handleForgotPassword()">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="auth-submit-btn" id="authSubmitBtn">
+                    Sign in as buyer
+                </button>
+
+                <div class="auth-footer-notice" id="authFooterNotice">
+                    New to AuctionFlow? <a href="javascript:void(0)" onclick="handleCreateAccountPrompt()">Create an account</a>
+                </div>
+
+                <!-- Demo Credentials Box (Clickable to autofill) -->
+                <div class="auth-demo-pill" id="authDemoPill" onclick="autoFillDemoCredentials()" title="Click to autofill credentials">
+                    <span id="authDemoText">Demo buyer login: <strong>buyer@demo.com</strong> / <strong>Buyer@123</strong></span>
+                    <span style="font-size:11px; opacity:0.8; margin-left:8px;">⚡ Autofill</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ESCROW DEPOSIT ================= -->
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-card" style="max-width: 440px;">
+            <button class="modal-close" onclick="closeDepositModal()">✕</button>
+            <div class="modal-header">
+                <h2>💳 Escrow Wallet Deposit</h2>
+                <p>Add funds to your verified bidding wallet to place bids instantly.</p>
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                Current Escrow Balance: <strong style="color:#34d399; font-size:16px;" id="depositCurrentBalance">$58,500</strong>
+            </div>
+
+            <div class="deposit-amount-grid">
+                <button type="button" class="deposit-chip" onclick="selectDepositAmount(5000)">+$5,000</button>
+                <button type="button" class="deposit-chip selected" onclick="selectDepositAmount(10000)">+$10,000</button>
+                <button type="button" class="deposit-chip" onclick="selectDepositAmount(25000)">+$25,000</button>
+            </div>
+
+            <div class="form-group">
+                <label>Deposit Amount ($ USD)</label>
+                <input type="number" id="depositAmountInput" min="500" step="500" value="10000" style="width:100%; padding:12px; background:#0d121f; border:1px solid #1f293d; border-radius:10px; color:#fff; font-family:var(--font-mono); font-size:16px; font-weight:700;">
+            </div>
+
+            <div class="modal-footer" style="margin-top:20px;">
+                <button type="button" class="btn-secondary" onclick="closeDepositModal()">Cancel</button>
+                <button type="button" class="btn-primary" onclick="confirmDeposit()">⚡ Instant Top-Up</button>
+            </div>
+        </div>
+    </div>
+    </div> <!-- /mainApp -->
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
