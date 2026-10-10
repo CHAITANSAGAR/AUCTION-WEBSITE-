@@ -1,0 +1,28 @@
+# Compiled Java / Maven
+target/
+*.class
+*.jar
+*.war
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+.npm
+.eslintcache
+
+# Environment & Keys
+.env
+.env.local
+*.key
+*.pem
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
